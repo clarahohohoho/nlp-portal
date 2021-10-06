@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script src="{{ url_for('static',filename='styles/jquery-3.1.1.min.js') }}"> </script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/semantic/dist/semantic.min.css') }}">
+    <script src="{{ url_for('static',filename='styles/semantic/dist/semantic.min.js') }}"> </script>
+    <meta charset ="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTX Extraction Tool</title>
+  </head>
+
+  <body>
+
+    <div class="ui large top fixed hidden menu">
+        <div class="ui container">
+          <a href=/ class="item">Home</a>
+          <a href=entity_extraction class="item">Entity Extraction</a>
+          <a href=sentiment_analysis class="active item">Sentiment Analysis</a>
+          <a href=qna class="item">Question and Answer</a>
+        </div>
+      </div>
+      <div class="ui inverted vertical masthead center aligned segment" style='min-height: 300px;display: flex; align-items: center'>
+        <div class="ui text container" style='text-align:center'>
+          <h1 class="ui inverted header">Sentiment Analysis</h1>
+          <h3>Input text on the left to get started!</h3>
+        </div>  
+      </div>
+  
+    <div class="ui two column relaxed very horizontally padded grid" style='margin-top:20px'>
+
+      <!-- Input Area -->
+      <div class='column'>
+
+          <!-- Input Text -->
+          <div class="ui top attached tabular menu">
+              <a class="active item" data-tab="input" style="font-size:20px">Input Text</a>
+          </div>
+          <div class="ui bottom attached active tab segment" data-tab="input">
+              <!-- <div class="ui raised segment"> -->
+                  <div class="ui form">
+                      <div class="field">
+                        <textarea placeholder="Write text here" id="text" style="font-size:15px"></textarea>
+                        <br>
+                        <h3>Model</h3>
+                        <div class="ui selection dropdown">
+                          <input type="hidden" name="model">
+                          <div class="default text">Choose Model</div>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                            <div class="item" data-value="spacy">
+                              Spacy
+                            </div>
+                            <div class="item" data-value="huggingface">
+                              <i class="amex icon"></i>
+                              HuggingFace
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <button class="ui button" type="submit" id='button' style="font-size:15px">Submit</button>
+                  </div>
+              <!-- </div> -->
+          </div>
+      </div>
+
+      <!-- Output Area -->
+      <div class='column'>
+        <h2>Results</h2>
+        <div class='ui divider'></div>
+        <!-- Sentiment Analysis -->
+        <div class="ui segment" style='margin-top:50px'>
+            <h2 class="ui dividing header">Sentiment</h2>
+            <div class = 'ui two column padded grid'>
+              <div class='column'>
+                <div class='ui text container' style='vertical-align:middle'>
+                  <h3>Sentiment Here</h3>
+                  <p>Score Here</p>
+                </div>
+              </div>
+              <div class='column'>
+                <div class='ui three column center aligned grid'>
+                    <div class = 'column'>
+                        <img class='negative' src="{{url_for('static', filename='icons/negative-off.svg')}}">
+                    </div>
+                    <div class = 'column'>
+                        <img class='neutral' src="{{url_for('static', filename='icons/neutral-off.svg')}}">
+                    </div>
+                    <div class = 'column'>
+                        <img class='positive' src="{{url_for('static', filename='icons/positive-off.svg')}}">
+                    </div>    
+                    <div class = 'row'>
+                        <div id="sen-content"></div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>                    
+      </div>    
+
+  </body>
+</html>

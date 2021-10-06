@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script src="{{ url_for('static',filename='styles/jquery-3.1.1.min.js') }}"> </script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/semantic/dist/semantic.min.css') }}">
+    <script src="{{ url_for('static',filename='styles/semantic/dist/semantic.min.js') }}"> </script>
+    <meta charset ="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTX Extraction Tool</title>
+  </head>
+
+  <body>
+
+    <div class="ui large top fixed hidden menu">
+      <div class="ui container">
+        <a href=/ class='item'>Home</a>
+        <a href=entity_extraction class="active item">Entity Extraction</a>
+        <a href=sentiment_analysis class="item">Sentiment Analysis</a>
+        <a href=qna class="item">Question and Answer</a>
+      </div>
+    </div>
+
+    <div class="ui inverted vertical masthead center aligned segment" style='min-height: 300px;display: flex; align-items: center'>
+      <div class="ui text container" style='text-align:center'>
+        <h1 class="ui inverted header">Entity Extraction</h1>
+        <h3>Input text on the left to get started!</h3>
+      </div>  
+    </div>
+
+    <div class="ui two column relaxed very horizontally padded grid" style='margin-top:20px'>
+
+      <!-- Input Area -->
+      <div class='column'>
+
+          <!-- Input Text -->
+          <div class="ui top attached tabular menu">
+              <a class="active item" data-tab="input" style="font-size:20px">Input Text</a>
+              <a class="item" data-tab="output" style="font-size:20px">Result</a>
+          </div>
+          <div class="ui bottom attached active tab segment" data-tab="input">
+              <!-- <div class="ui raised segment"> -->
+                  <div class="ui form">
+                      <div class="field">
+                        <textarea placeholder="Write text here" id="text" style="font-size:15px"></textarea>
+                      </div>
+                      <button class="ui button" type="submit" id='button' style="font-size:15px">Submit</button>
+                  </div>
+              <!-- </div> -->
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="output">
+              <div id = 'output-content'>
+                  <div class="ui negative message">
+                      <div class="header" style="font-size:20px">
+                        No input found!
+                      </div>
+                      <p style="font-size:20px">Please input text and click on Submit once done.</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Output Area -->
+      <div class='column'>
+        <h2>Results</h2>
+        <div class='ui divider'></div>
+          <!-- Entities -->
+          <div class="ui segments">
+              <div class='ui segment'>
+                  <h2 class="ui dividing header">Entities</h2>
+              </div>
+              <div class="ui teal segment">
+                  <div class="ui two column stackable grid">
+                      <div class='column'>
+                          <p style="font-size:20px; text-align:center">NRIC</p>
+                      </div>
+                      <div class='column'>
+      
+                          <div id="nric-content"></div>
+      
+                      </div>
+                  </div>
+              </div>
+              <div class="ui brown segment">
+                  <div class="ui two column stackable grid">
+                      <div class='column'>
+                          <p style="font-size:20px; text-align:center">License Plates</p>
+                      </div>
+                      <div class='column'>
+      
+                          <div id="lp-content"></div>
+      
+                      </div>
+                  </div>
+              </div>
+              <div class="ui purple segment">
+                  <div class="ui two column stackable grid">
+                      <div class='column'>
+                          <p style="font-size:20px; text-align:center">Phone Number</p>
+                      </div>
+                      <div class='column'>
+      
+                          <div id="phone-content"></div>
+                  
+                      </div>
+                  </div>
+              </div>
+              <div class="ui red segment">
+                  <div class="ui two column stackable grid">
+                      <div class='column'>
+                          <p style="font-size:20px; text-align:center">Weapons</p>
+                      </div>
+                      <div class='column'>
+                    
+                          <div id="weapon-content"></div>
+      
+                      </div>
+                  </div>
+              </div>
+              <div class="ui yellow segment">
+                  <div class="ui two column stackable grid">
+                      <div class='column'>
+                          <p style="font-size:20px; text-align:center">Locations</p>
+                      </div>
+                      <div class='column'>
+      
+                          <div id="loc-content"></div>
+      
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </div>
+
+
+  </body>
+
+</html>

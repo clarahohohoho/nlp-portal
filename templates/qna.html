@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script src="{{ url_for('static',filename='styles/jquery-3.1.1.min.js') }}"> </script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/semantic/dist/semantic.min.css') }}">
+    <script src="{{ url_for('static',filename='styles/semantic/dist/semantic.min.js') }}"> </script>
+    <meta charset ="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTX Extraction Tool</title>
+  </head>
+
+  <body>
+
+    <div class="ui large top fixed hidden menu">
+      <div class="ui container">
+        <a href=/ class="item">Home</a>
+        <a href=entity_extraction class="item">Entity Extraction</a>
+        <a href=sentiment_analysis class="item">Sentiment Analysis</a>
+        <a href=qna class="active item">Question and Answer</a>
+      </div>
+    </div>
+
+    <div class="ui inverted vertical masthead center aligned segment" style='min-height: 300px;display: flex; align-items: center'>
+      <div class="ui text container" style='text-align:center'>
+        <h1 class="ui inverted header">Question and Answer</h1>
+        <h3>Input text on the left to get started!</h3>
+      </div>  
+    </div>
+
+    <div class="ui two column relaxed very horizontally padded grid" style='margin-top:20px'>
+
+      <!-- Input Area -->
+      <div class='column'>
+
+          <!-- Input Text -->
+          <div class="ui top attached tabular menu">
+              <a class="active item" data-tab="single-input" style="font-size:20px">Single Article</a>
+              <a class="item" data-tab="multi-input" style="font-size:20px">Multi Articles</a>
+          </div>
+          <div class="ui bottom attached active tab segment" data-tab="single-input">
+              <!-- <div class="ui raised segment"> -->
+                  <div class="ui form">
+                      <div class="field">
+                          <h3>Article:</h3>
+                          <textarea placeholder="Write text here" id="single-text" style="font-size:15px"></textarea>
+                          <h3>Question:<h3>
+                          <input type='text' placeholder="Ask me a question!" id="qn-single-text" style="font-size:15px">
+                      </div>
+                      <div id="ans-single-content"></div>
+                      <br>
+                      <button class="ui button" type="submit" id='single-button' style="font-size:15px">Ask Away!!</button>
+                  </div>
+              <!-- </div> -->
+          </div>
+          <div class="ui bottom attached tab segment" data-tab="multi-input">
+              
+              <div class="field six wide">
+                  <h3>Articles:<h3>
+                  <label style="font-size:17px">Upload CSV file:</label>
+                  <div class="ui action input">
+                      <input type="text" id='multi-text' readonly>
+                      <input type="file" name="File" style="display: none!important;" />
+                  <div class="ui icon button">
+                      <i class="cloud upload alternate icon"></i>
+                  </div>
+                  </div>
+              </div>
+              <br>
+              <div class="ui form">
+                  <div class="field">
+                      <h3>Question:<h3>
+                      <input type='text' placeholder="Ask me a question!" id="qn-multi-text" style="font-size:15px">
+                  </div>
+              </div>
+              <div id="ans-multi-content"></div>
+              <br>
+              <button class="ui button" type="submit" id='multi-button' style="font-size:15px">Ask Away!!</button>
+          </div>
+      </div>
+      <!-- Output Area -->
+      <div class='column'>
+          <h2>Results</h2>
+          <div class='ui divider'></div>
+          <br>
+          <div id='result-table'></div>
+      </div>
+
+
+
+  </body>
+</html>

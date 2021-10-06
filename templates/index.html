@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script src="{{ url_for('static',filename='styles/jquery-3.1.1.min.js') }}"> </script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/semantic/dist/semantic.min.css') }}">
+    <script src="{{ url_for('static',filename='styles/semantic/dist/semantic.min.js') }}"> </script>
+    <meta charset ="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTX Extraction Tool</title>
+  </head>
+
+  <body>
+
+    <!-- Page Contents -->
+    <div class="ui large top fixed menu" style='vertical-align: middle'>
+      <div class="ui container">
+        <a href=/ class="active item">Home</a>
+        <a href=entity_extraction class="item">Entity Extraction</a>
+        <a href=sentiment_analysis class="item">Sentiment Analysis</a>
+        <a href=qna class="item">Question and Answer</a>
+      </div>
+    </div>
+
+    <!-- Title
+    <div class="ui fluid container">
+        <img src="{{url_for('static', filename='icons/htx.png')}}"  style="vertical-align:middle">
+        <span style="font-size:30px">HTX NLP Tools</span>
+    </div> -->
+
+    <div class="ui inverted vertical masthead center aligned segment" style='min-height: 500px;display: flex; align-items: center'>
+      <div class="ui text container" style='text-align:center'>
+        <h1 class="ui inverted massive header">HTX NLP Tools</h1>
+        <h2>Do whatever you want when you want to.</h2>
+        <h3>Powered by DSAI</h3>
+      </div>  
+    </div>
+
+    <div class='ui container' style='text-align:center;margin-top:100px'>
+      <div class="ui text container" style='text-align:center'>
+        <h2>Let's have some fun!</h2>
+      </div>
+      <div class='ui three column center aligned grid' style='margin-top:50px;'>
+        <div class='column'>
+          <a href=entity_extraction><button class="ui fluid massive labeled icon button">
+            <i class="file alternate outline icon"></i>
+            Entity Extraction
+          </button></a>
+            
+        </div>
+        <div class='column'>
+          <a href=sentiment_analysis><button class="ui fluid massive labeled icon button">
+            <i class="smile outline icon"></i>
+            Sentiment Analysis
+          </button></a>
+        </div>
+        <div class='column'>
+          <a href=qna><button class="ui fluid massive labeled icon button" style = 'white-space: nowrap'>
+            <i class="comment alternate outline icon"></i>
+            Question and Answer
+          </button></a>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
