@@ -86,7 +86,74 @@
           <div id='result-table'></div>
       </div>
 
+    <!-- SCRIPTS -->
 
+    <script>
+      $(document).ready(function(){
+          $('.tabular.menu .item').tab({history:false});
+      });
+    </script>
+    <script type="text/javascript">
+        $('input:text, .ui.button', '.ui.action.input').on('click', function (e) {
+            $('input:file', $(e.target).parents()).click();
+        });
+
+        $('input:file', '.ui.action.input').on('change', function (e) {
+            var name = e.target.files[0].name;
+            $('input:text', $(e.target).parent()).val(name);
+        });
+        
+        $("#single-button").click(function (e) {
+            console.log("Performing single-article QnA");
+            let text = $("#single-text").val();
+            let qn = $("#qn-single-text").val();
+            $('#single-button').attr('class', 'ui loading button');
+            $("#ans-single-content").html("");
+            $("#result-table").html("");
+
+            $.post("http://127.0.0.1:5000/run-qna-main-single", {text: text, qn:qn}, singlereceiveData);
+        });
+
+        $("#multi-button").click(function (e) {
+            console.log("Performing multi-article QnA");
+            let text = $("#multi-text").val();
+            let qn = $("#qn-multi-text").val();
+            $('#multi-button').attr('class', 'ui loading button');
+            $("#ans-multi-content").html("");
+            $("#result-table").html("");
+
+            $.post("http://127.0.0.1:5000/run-main-multiple", {text: text, qn:qn}, multireceiveData);
+        });
+        function singlereceiveData(response) {
+
+        $('#single-button').attr('class', 'ui button')
+
+            let html_table = "<table class='ui celled table'> <thead><tr><th>No</th><th>Answer</th><th>Probability</th></tr></thead><tbody>";
+            for (let i = 0; i < response.ans.length; i++) {
+                html_table += "<tr><td data-label='No'>" + (i+1) + "</td><td data-label='Answer'>" + response.ans[i] + "</td><td data-label='Probability'>" + response.prob[i] + "</td></tr>";
+            }
+            html_table += "</tbody></table></div>"
+            $("#result-table").html(html_table);
+
+            html_ans = "<div class='ui green inverted segment'><p style='font-size:15px'>" + response.ans[0] + "</p></div><br>";
+            $("#ans-single-content").html(html_ans);
+        };
+
+        function multireceiveData(response) {
+
+            $('#multi-button').attr('class', 'ui button')
+
+            let html_table = "<table class='ui celled table'> <thead><tr><th>No</th><th>Answer</th><th>Context</th><th>Probability</th></tr></thead><tbody>";
+            for (let i = 0; i < response.ans.length; i++) {
+                html_table += "<tr><td data-label='No'>" + (i+1) + "</td><td data-label='Answer'>" + response.ans[i] + "</td><td data-label='Context'>" + response.context[i] + "</td><td data-label='Probability'>" + response.prob[i] + "</td></tr>";
+            }
+            html_table += "</tbody></table></div>"
+            $("#result-table").html(html_table);
+
+            html_ans = "<div class='ui green inverted segment'><p style='font-size:15px'>" + response.ans[0] + "</p></div><br>";
+            $("#ans-multi-content").html(html_ans);
+        };
+    </script>
 
   </body>
 </html>

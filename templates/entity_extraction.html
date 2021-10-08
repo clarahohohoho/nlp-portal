@@ -69,6 +69,18 @@
               <div class='ui segment'>
                   <h2 class="ui dividing header">Entities</h2>
               </div>
+              <div class="ui red segment">
+                <div class="ui two column stackable grid">
+                    <div class='column'>
+                        <p style="font-size:20px; text-align:center">People</p>
+                    </div>
+                    <div class='column'>
+                  
+                        <div id="people-content"></div>
+    
+                    </div>
+                </div>
+              </div>
               <div class="ui teal segment">
                   <div class="ui two column stackable grid">
                       <div class='column'>
@@ -105,18 +117,6 @@
                       </div>
                   </div>
               </div>
-              <div class="ui red segment">
-                  <div class="ui two column stackable grid">
-                      <div class='column'>
-                          <p style="font-size:20px; text-align:center">Weapons</p>
-                      </div>
-                      <div class='column'>
-                    
-                          <div id="weapon-content"></div>
-      
-                      </div>
-                  </div>
-              </div>
               <div class="ui yellow segment">
                   <div class="ui two column stackable grid">
                       <div class='column'>
@@ -132,7 +132,69 @@
           </div>
       </div>
 
-  </div>
+    </div>
+
+    <script>
+      // $('.menu .item').tab();
+      $(document).ready(function(){
+          $('.tabular.menu .item').tab({history:false});
+      });
+    </script>
+
+    <!--Output Results-->
+
+    <script type="text/javascript">
+      function receiveData(response) {
+
+            var divContent = "<p style='font-size:20px'>" + response.text + "</p>"; 
+
+            $('#button').attr('class', 'ui button')
+
+            // location
+            let html_loc = "";
+            var loc_color = 'yellow';
+
+            for (let i = 0; i < response.loc.length; i++) {
+                html_loc += "<a class='ui " + loc_color + " label' style='font-size:15px'>" + response.loc[i] + "</a>";
+                var re = new RegExp(response.loc[i], 'gi');
+                var divContent = divContent.replace(re, "<a class='ui " + loc_color + " label' style='font-size:20px' data-tooltip='Location'>" + response.loc[i] + "</a>"); 
+            }
+            $("#loc-content").html(html_loc);
+
+            // nric
+            let html_nric = "";
+            var nric_color = 'teal';
+            for (let i = 0; i < response.nric.length; i++) {
+                html_nric += "<a class='ui " + nric_color + " label' style='font-size:15px'>" + response.nric[i] + "</a>";
+                var re = new RegExp(response.nric[i], 'g');
+                var divContent = divContent.replace(re, "<a class='ui " + nric_color + " label' style='font-size:20px' data-tooltip='NRIC'>" + response.nric[i] + "</a>"); 
+            }
+            $("#nric-content").html(html_nric);
+
+            // phone
+            let html_phone = "";
+            var phone_color = 'violet';
+            for (let i = 0; i < response.phone.length; i++) {
+                html_phone += "<a class='ui " + phone_color + " label' style='font-size:15px'>" + response.phone[i] + "</a>";
+                var re = new RegExp(response.phone[i], 'g');
+                var divContent = divContent.replace(re, "<a class='ui " + phone_color + " label' style='font-size:20px' data-tooltip='Phone Number'>" + response.phone[i] + "</a>"); 
+            }
+            $("#phone-content").html(html_phone);
+
+            $("#output-content").html(divContent);
+            // $.tab('change tab', 'output');
+            $('.ui.menu').find('.item').tab('change tab', 'output');    
+      }
+
+      $("#button").click(function (e) {
+            console.log("Performing entity extraction");
+            let text = $("#text").val();
+            $('#button').attr('class', 'ui loading button');
+
+            $.post("http://127.0.0.1:5000/run-ee-main", {text: text}, receiveData);
+      });
+    
+    </script>
 
 
   </body>

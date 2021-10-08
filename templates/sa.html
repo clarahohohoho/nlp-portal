@@ -44,7 +44,7 @@
                         <br>
                         <h3>Model</h3>
                         <div class="ui selection dropdown">
-                          <input type="hidden" name="model">
+                          <input type="hidden" name="model" id="model">
                           <div class="default text">Choose Model</div>
                           <i class="dropdown icon"></i>
                           <div class="menu">
@@ -52,7 +52,6 @@
                               Spacy
                             </div>
                             <div class="item" data-value="huggingface">
-                              <i class="amex icon"></i>
                               HuggingFace
                             </div>
                           </div>
@@ -75,8 +74,7 @@
             <div class = 'ui two column padded grid'>
               <div class='column'>
                 <div class='ui text container' style='vertical-align:middle'>
-                  <h3>Sentiment Here</h3>
-                  <p>Score Here</p>
+                  <div id="sen-content"></div>
                 </div>
               </div>
               <div class='column'>
@@ -89,15 +87,56 @@
                     </div>
                     <div class = 'column'>
                         <img class='positive' src="{{url_for('static', filename='icons/positive-off.svg')}}">
-                    </div>    
-                    <div class = 'row'>
-                        <div id="sen-content"></div>
                     </div>
                 </div>
               </div>
             </div>
         </div>                    
-      </div>    
+      </div>
+
+    <!--Output Results-->
+
+    <script>
+      $('.ui.dropdown').dropdown();
+    </script>
+
+    <script type="text/javascript">
+      function receiveData(response) {
+      
+        $('#button').attr('class', 'ui button')
+
+        // sentiment
+        let html_sen = "";
+        $('.negative').attr('src', "{{url_for('static', filename='icons/negative-off.svg')}}");
+        $('.neutral').attr('src', "{{url_for('static', filename='icons/neutral-off.svg')}}");
+        $('.positive').attr('src', "{{url_for('static', filename='icons/positive-off.svg')}}");
+        if (response.sen == 'Negative') {
+            html_sen = "<p style='font-size:20px;text-align:center'>Negative</p><p style='font-size:20px;text-align:center'>" + response.score.toFixed(2) + "</p>";
+            $('.negative').attr('src', "{{url_for('static', filename='icons/negative.svg')}}");
+            }
+            else if (response.sen == 'Positive') {
+                html_sen = "<p style='font-size:20px;text-align:center'>Positive</p><p style='font-size:20px;text-align:center'>" + response.score.toFixed(2) + "</p>";
+            $('.positive').attr('src', "{{url_for('static', filename='icons/positive.svg')}}");
+            }
+            else {
+                html_sen = "<p style='font-size:20px;text-align:center'>Neutral</p><p style='font-size:20px;text-align:center'>" + response.score.toFixed(2) + "</p>";
+            $('.neutral').attr('src', "{{url_for('static', filename='icons/neutral.svg')}}");
+            }
+
+        $("#sen-content").html(html_sen);
+          
+      }
+
+      $("#button").click(function (e) {
+        console.log("Performing sentiment analysis");
+        let text = $("#text").val();
+        let model=$("#model").val();
+        $('#button').attr('class', 'ui loading button');
+
+        $.post("http://127.0.0.1:5000/run-sen-main", {text: text, model:model}, receiveData);
+      });
+   
+    </script>
 
   </body>
 </html>
