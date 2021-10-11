@@ -23,7 +23,8 @@
       <div class="ui inverted vertical masthead center aligned segment" style='min-height: 300px;display: flex; align-items: center'>
         <div class="ui text container" style='text-align:center'>
           <h1 class="ui inverted header">Sentiment Analysis</h1>
-          <h3>Input text on the left to get started!</h3>
+          <h3>A technique that predicts the emotional tone (positive, netural and negative) of a given text.</h3>
+          <h3>Input text and choose a model on the left to get started!</h3>
         </div>  
       </div>
   
@@ -34,15 +35,15 @@
 
           <!-- Input Text -->
           <div class="ui top attached tabular menu">
-              <a class="active item" data-tab="input" style="font-size:20px">Input Text</a>
+              <a class="active item" data-tab="input" style="font-size:20px" data-tooltip='Input text for analysis in tab here' data-position="top left">Input Text</a>
           </div>
           <div class="ui bottom attached active tab segment" data-tab="input">
               <!-- <div class="ui raised segment"> -->
                   <div class="ui form">
-                      <div class="field">
-                        <textarea placeholder="Write text here" id="text" style="font-size:15px"></textarea>
+                      <div class="field" id="fields">
+                        <textarea placeholder="e.g. I am very angry today." id="text" style="font-size:15px"></textarea>
                         <br>
-                        <h3>Model</h3>
+                        <h3>Model <i class="small info circle icon" data-html="<h4> Choose type of model below: </h4> <ul><li>Spacy: Lexicon-based sentiment analysis. Great for text that are straightforward in nature.</li><li>Huggingface: Deep Learning-based sentiment analysis with RoBERTa. Great for short texts.</li></ul>" data-position="top left" style="white-space: pre-wrap;"></i></h3>
                         <div class="ui selection dropdown">
                           <input type="hidden" name="model" id="model">
                           <div class="default text">Choose Model</div>
@@ -59,6 +60,7 @@
 
                       </div>
                       <button class="ui button" type="submit" id='button' style="font-size:15px">Submit</button>
+                      <div id='error-message'></div>
                   </div>
               <!-- </div> -->
           </div>
@@ -66,7 +68,7 @@
 
       <!-- Output Area -->
       <div class='column'>
-        <h2>Results</h2>
+        <h2>Results <i class="small info circle icon" data-html="Predicted sentiment reflected below.<ul><li>Spacy returns polarity score that reflects how negative/positive the text is.</li><li>Huggingface returns probability score that reflects how confident the model is predicting the resulting sentiment.</li></ul>" data-position="top left"></i></h2>
         <div class='ui divider'></div>
         <!-- Sentiment Analysis -->
         <div class="ui segment" style='margin-top:50px'>
@@ -98,6 +100,7 @@
 
     <script>
       $('.ui.dropdown').dropdown();
+      $('.small.info.circle.icon').popup();
     </script>
 
     <script type="text/javascript">
@@ -111,15 +114,15 @@
         $('.neutral').attr('src', "{{url_for('static', filename='icons/neutral-off.svg')}}");
         $('.positive').attr('src', "{{url_for('static', filename='icons/positive-off.svg')}}");
         if (response.sen == 'Negative') {
-            html_sen = "<p style='font-size:20px;text-align:center'>Negative</p><p style='font-size:20px;text-align:center'>" + response.score.toFixed(2) + "</p>";
+            html_sen = "<p style='font-size:20px;text-align:center'>Negative</p><p style='font-size:20px;text-align:center'>" + response.score_type + response.score.toFixed(2) + "</p>";
             $('.negative').attr('src', "{{url_for('static', filename='icons/negative.svg')}}");
             }
             else if (response.sen == 'Positive') {
-                html_sen = "<p style='font-size:20px;text-align:center'>Positive</p><p style='font-size:20px;text-align:center'>" + response.score.toFixed(2) + "</p>";
+                html_sen = "<p style='font-size:20px;text-align:center'>Positive</p><p style='font-size:20px;text-align:center'>" + response.score_type + response.score.toFixed(2) + "</p>";
             $('.positive').attr('src', "{{url_for('static', filename='icons/positive.svg')}}");
             }
             else {
-                html_sen = "<p style='font-size:20px;text-align:center'>Neutral</p><p style='font-size:20px;text-align:center'>" + response.score.toFixed(2) + "</p>";
+                html_sen = "<p style='font-size:20px;text-align:center'>Neutral</p><p style='font-size:20px;text-align:center'>" + response.score_type + response.score.toFixed(2) + "</p>";
             $('.neutral').attr('src', "{{url_for('static', filename='icons/neutral.svg')}}");
             }
 
@@ -131,9 +134,16 @@
         console.log("Performing sentiment analysis");
         let text = $("#text").val();
         let model=$("#model").val();
-        $('#button').attr('class', 'ui loading button');
-
-        $.post("http://127.0.0.1:5000/run-sen-main", {text: text, model:model}, receiveData);
+        if ((!text) || (!model)) {
+              $("#error-message").html('</br><div class="ui negative message"><div class="header">Submission Failed</div><p>Please ensure that all fields are filled up.</p></div>');
+              $("#fields").attr('class', 'field error');
+            }
+        else{
+          $("#error-message").html("");
+          $("#fields").attr('class', 'field');
+          $('#button').attr('class', 'ui loading button');
+          $.post("http://127.0.0.1:5000/run-sen-main", {text: text, model:model}, receiveData);
+        }
       });
    
     </script>

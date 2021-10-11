@@ -24,7 +24,8 @@
     <div class="ui inverted vertical masthead center aligned segment" style='min-height: 300px;display: flex; align-items: center'>
       <div class="ui text container" style='text-align:center'>
         <h1 class="ui inverted header">Question and Answer</h1>
-        <h3>Input text on the left to get started!</h3>
+        <h3>The task of extracting an answer from a text given a question.</h3>
+        <h3>Input text and a relevant question on the left to get started!</h3>
       </div>  
     </div>
 
@@ -35,32 +36,32 @@
 
           <!-- Input Text -->
           <div class="ui top attached tabular menu">
-              <a class="active item" data-tab="single-input" style="font-size:20px">Single Article</a>
-              <a class="item" data-tab="multi-input" style="font-size:20px">Multi Articles</a>
+              <a class="active item" data-tab="single-input" style="font-size:20px" data-tooltip='Input text and question for analysis in tab here' data-position="top left">Input</a>
+              <!-- <a class="item" data-tab="multi-input" style="font-size:20px">Multi Articles</a> -->
           </div>
           <div class="ui bottom attached active tab segment" data-tab="single-input">
               <!-- <div class="ui raised segment"> -->
                   <div class="ui form">
-                      <div class="field">
-                          <h3>Article:</h3>
-                          <textarea placeholder="Write text here" id="single-text" style="font-size:15px"></textarea>
+                      <div class="field" id='fields'>
+                          <h3>Text:</h3>
+                          <textarea placeholder="e.g. Mary is wearing a red dress today." id="single-text" style="font-size:15px"></textarea>
                           <h3>Question:<h3>
-                          <input type='text' placeholder="Ask me a question!" id="qn-single-text" style="font-size:15px">
+                          <input type='text' placeholder="e.g. What color is Mary's dress?" id="qn-single-text" style="font-size:15px">
                       </div>
                       <div id="ans-single-content"></div>
-                      <br>
                       <button class="ui button" type="submit" id='single-button' style="font-size:15px">Ask Away!!</button>
+                      <div id='error-message'></div>
                   </div>
               <!-- </div> -->
           </div>
-          <div class="ui bottom attached tab segment" data-tab="multi-input">
+          <!-- <div class="ui bottom attached tab segment" data-tab="multi-input">
               
               <div class="field six wide">
                   <h3>Articles:<h3>
                   <label style="font-size:17px">Upload CSV file:</label>
                   <div class="ui action input">
                       <input type="text" id='multi-text' readonly>
-                      <input type="file" name="File" style="display: none!important;" />
+                      <input type="file" name="File" id='csv_upload' style="display: none!important;" />
                   <div class="ui icon button">
                       <i class="cloud upload alternate icon"></i>
                   </div>
@@ -76,11 +77,11 @@
               <div id="ans-multi-content"></div>
               <br>
               <button class="ui button" type="submit" id='multi-button' style="font-size:15px">Ask Away!!</button>
-          </div>
+          </div> -->
       </div>
       <!-- Output Area -->
       <div class='column'>
-          <h2>Results</h2>
+          <h2>Results <i class="small info circle icon" data-content="Maximum of top 3 possible extracted answers of given question will be shown below." data-position="top left"></i></h2>
           <div class='ui divider'></div>
           <br>
           <div id='result-table'></div>
@@ -89,9 +90,10 @@
     <!-- SCRIPTS -->
 
     <script>
-      $(document).ready(function(){
-          $('.tabular.menu .item').tab({history:false});
-      });
+      // $(document).ready(function(){
+      //     $('.tabular.menu .item').tab({history:false});
+      // });
+      $('.small.info.circle.icon').popup();
     </script>
     <script type="text/javascript">
         $('input:text, .ui.button', '.ui.action.input').on('click', function (e) {
@@ -107,23 +109,32 @@
             console.log("Performing single-article QnA");
             let text = $("#single-text").val();
             let qn = $("#qn-single-text").val();
-            $('#single-button').attr('class', 'ui loading button');
-            $("#ans-single-content").html("");
-            $("#result-table").html("");
+            if ((!text) || (!qn)) {
+              $("#error-message").html('</br><div class="ui negative message"><div class="header">Submission Failed</div><p>Please ensure that all fields are filled up.</p></div>');
+              $("#fields").attr('class', 'field error');
+            }
+            else{
+              $("#error-message").html("");
+              $("#fields").attr('class', 'field');
+              $('#single-button').attr('class', 'ui loading button');
+              $("#ans-single-content").html("");
+              $("#result-table").html("");
 
-            $.post("http://127.0.0.1:5000/run-qna-main-single", {text: text, qn:qn}, singlereceiveData);
+              $.post("http://127.0.0.1:5000/run-qna-main-single", {text: text, qn:qn}, singlereceiveData);
+            }
+
         });
 
-        $("#multi-button").click(function (e) {
-            console.log("Performing multi-article QnA");
-            let text = $("#multi-text").val();
-            let qn = $("#qn-multi-text").val();
-            $('#multi-button').attr('class', 'ui loading button');
-            $("#ans-multi-content").html("");
-            $("#result-table").html("");
+        // $("#multi-button").click(function (e) {
+        //     console.log("Performing multi-article QnA");
+        //     let text = $("#multi-text").val();
+        //     let qn = $("#qn-multi-text").val();
+        //     $('#multi-button').attr('class', 'ui loading button');
+        //     $("#ans-multi-content").html("");
+        //     $("#result-table").html("");
 
-            $.post("http://127.0.0.1:5000/run-main-multiple", {text: text, qn:qn}, multireceiveData);
-        });
+        //     $.post("http://127.0.0.1:5000/run-qna-main-multiple", {text: text, qn:qn}, multireceiveData);
+        // });
         function singlereceiveData(response) {
 
         $('#single-button').attr('class', 'ui button')

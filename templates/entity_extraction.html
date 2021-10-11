@@ -24,6 +24,7 @@
     <div class="ui inverted vertical masthead center aligned segment" style='min-height: 300px;display: flex; align-items: center'>
       <div class="ui text container" style='text-align:center'>
         <h1 class="ui inverted header">Entity Extraction</h1>
+        <h3>An information extraction technique that identifies key elements from text, then classifies them into predefined categories.</h3>
         <h3>Input text on the left to get started!</h3>
       </div>  
     </div>
@@ -35,16 +36,17 @@
 
           <!-- Input Text -->
           <div class="ui top attached tabular menu">
-              <a class="active item" data-tab="input" style="font-size:20px">Input Text</a>
-              <a class="item" data-tab="output" style="font-size:20px">Result</a>
+              <a class="active item" data-tab="input" style="font-size:20px" data-tooltip='Input text for analysis in tab here' data-position="top left">Input Text</a>
+              <a class="item" data-tab="output" style="font-size:20px" data-tooltip='Highlights extracted entities from given input text' data-position="top left">Result</a>
           </div>
           <div class="ui bottom attached active tab segment" data-tab="input">
               <!-- <div class="ui raised segment"> -->
                   <div class="ui form">
-                      <div class="field">
-                        <textarea placeholder="Write text here" id="text" style="font-size:15px"></textarea>
+                      <div class="field" id='fields'>
+                        <textarea placeholder="e.g. My name is Clara and I am wearing a red dress." id="text" style="font-size:15px"></textarea>
                       </div>
                       <button class="ui button" type="submit" id='button' style="font-size:15px">Submit</button>
+                      <div id='error-message'></div>
                   </div>
               <!-- </div> -->
           </div>
@@ -62,7 +64,7 @@
 
       <!-- Output Area -->
       <div class='column'>
-        <h2>Results</h2>
+        <h2>Results <i class="small info circle icon" data-content="Groups and lists extracted entities in the categories below" data-position="top left"></i></h2>
         <div class='ui divider'></div>
           <!-- Entities -->
           <div class="ui segments">
@@ -72,11 +74,11 @@
               <div class="ui red segment">
                 <div class="ui two column stackable grid">
                     <div class='column'>
-                        <p style="font-size:20px; text-align:center">People</p>
+                        <p style="font-size:20px; text-align:center">Person</p>
                     </div>
                     <div class='column'>
                   
-                        <div id="people-content"></div>
+                        <div id="person-content"></div>
     
                     </div>
                 </div>
@@ -89,18 +91,6 @@
                       <div class='column'>
       
                           <div id="nric-content"></div>
-      
-                      </div>
-                  </div>
-              </div>
-              <div class="ui brown segment">
-                  <div class="ui two column stackable grid">
-                      <div class='column'>
-                          <p style="font-size:20px; text-align:center">License Plates</p>
-                      </div>
-                      <div class='column'>
-      
-                          <div id="lp-content"></div>
       
                       </div>
                   </div>
@@ -129,6 +119,18 @@
                       </div>
                   </div>
               </div>
+              <div class="ui blue segment">
+                <div class="ui two column stackable grid">
+                    <div class='column'>
+                        <p style="font-size:20px; text-align:center">Objects</p>
+                    </div>
+                    <div class='column'>
+    
+                        <div id="obj-content"></div>
+    
+                    </div>
+                </div>
+            </div>
           </div>
       </div>
 
@@ -139,6 +141,7 @@
       $(document).ready(function(){
           $('.tabular.menu .item').tab({history:false});
       });
+      $('.small.info.circle.icon').popup();
     </script>
 
     <!--Output Results-->
@@ -149,6 +152,17 @@
             var divContent = "<p style='font-size:20px'>" + response.text + "</p>"; 
 
             $('#button').attr('class', 'ui button')
+
+            // person
+            let html_person = "";
+            var person_color = 'red';
+
+            for (let i = 0; i < response.person.length; i++) {
+                html_person += "<a class='ui " + person_color + " label' style='font-size:15px'>" + response.person[i] + "</a>";
+                var re = new RegExp(response.person[i], 'gi');
+                var divContent = divContent.replace(re, "<a class='ui " + person_color + " label' style='font-size:20px' data-tooltip='Person'>" + response.person[i] + "</a>"); 
+            }
+            $("#person-content").html(html_person);            
 
             // location
             let html_loc = "";
@@ -181,6 +195,16 @@
             }
             $("#phone-content").html(html_phone);
 
+            // objects
+            let html_obj = "";
+            var obj_color = 'blue';
+            for (let i = 0; i < response.obj.length; i++) {
+                html_obj += "<a class='ui " + obj_color + " label' style='font-size:15px'>" + response.obj[i] + "</a>";
+                var re = new RegExp(response.obj[i], 'g');
+                var divContent = divContent.replace(re, "<a class='ui " + obj_color + " label' style='font-size:20px' data-tooltip='Object'>" + response.obj[i] + "</a>"); 
+            }
+            $("#obj-content").html(html_obj);
+
             $("#output-content").html(divContent);
             // $.tab('change tab', 'output');
             $('.ui.menu').find('.item').tab('change tab', 'output');    
@@ -189,9 +213,16 @@
       $("#button").click(function (e) {
             console.log("Performing entity extraction");
             let text = $("#text").val();
-            $('#button').attr('class', 'ui loading button');
-
-            $.post("http://127.0.0.1:5000/run-ee-main", {text: text}, receiveData);
+            if (!text) {
+              $("#error-message").html('</br><div class="ui negative message"><div class="header">Submission Failed</div><p>Please ensure that all fields are filled up.</p></div>');
+              $("#fields").attr('class', 'field error');
+            }
+            else{
+                $("#error-message").html("");
+                $("#fields").attr('class', 'field');
+                $('#button').attr('class', 'ui loading button');
+                $.post("http://127.0.0.1:5000/run-ee-main", {text: text}, receiveData);
+            }
       });
     
     </script>

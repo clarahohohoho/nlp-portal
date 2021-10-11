@@ -31,7 +31,6 @@ def main(context, qn):
         answer = tokenizer.convert_tokens_to_string(tokenizer.convert_ids_to_tokens(input_ids[start:end]))
         # if end < start:
         #     answer = tokenizer.convert_tokens_to_string(tokenizer.convert_ids_to_tokens(input_ids[end:start]))
-        print(start_values[0][i].detach().numpy(), answer)
         if start_values[0][i].detach().numpy() > 0.2 and answer!="" and '[CLS]' not in answer and '[SEP]' not in answer:
             res.append(answer)
             prob.append(str(start_values[0][i].detach().numpy()))

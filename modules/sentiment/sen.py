@@ -12,13 +12,13 @@ def sen_spacy(text):
     doc = nlp(text)
 
     if doc._.polarity < 0:
-        return 'Negative', doc._.polarity
+        return 'Negative', doc._.polarity, 'Polarity: '
 
     elif doc._.polarity == 0:
-        return 'Neutral', doc._.polarity
+        return 'Neutral', doc._.polarity, 'Polarity: '
 
     elif doc._.polarity > 0:
-        return 'Positive', doc._.polarity
+        return 'Positive', doc._.polarity, 'Polarity: '
 
 def sen_hf(text):
 
@@ -37,14 +37,14 @@ def sen_hf(text):
         if maxarg == key:
             sentiment = mapping[key]
 
-    return sentiment, max(scores)
+    return sentiment, max(scores), 'Probability: '
 
 def main_sen(text, model):
 
     if model == 'spacy':
-        sentiment, score = sen_spacy(text)
+        sentiment, score, score_type = sen_spacy(text)
 
     elif model == 'huggingface':
-        sentiment, score = sen_hf(text)
+        sentiment, score, score_type = sen_hf(text)
 
-    return sentiment, score
+    return sentiment, score, score_type
